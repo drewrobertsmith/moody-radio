@@ -10,9 +10,10 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="podcasts"
+        name="(stack)"
         options={{
           title: "Podcasts",
+          headerShown: false,
         }}
       />
     </Tabs>
