@@ -2,36 +2,42 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { formatDate, formatDuration } from "../services/formatters";
 
 import { AntDesign } from "@expo/vector-icons";
+import { Link } from "expo-router";
 
 export default function PodcastEpisodeItem({ item }) {
   return (
-    // <Link
-    //   href={{
-    //     pathname: "/[episodeItem]",
-    //     params: { Title: item.Title, Id: item.Id },
-    //   }}
-    //   asChild
-    // >
     <View style={styles.container}>
       <View style={styles.episodeInfo}>
-        <Pressable>
-          <Text style={styles.info}>
-            {item.Season && item.Episode
-              ? `S${item.Season} E${item.Episode} - `
-              : ""}
-            {formatDate(item.PublishedUtc)}
-          </Text>
-          <Text style={styles.title}>{item.Title}</Text>
-          <Text style={styles.duration}>
-            {formatDuration(item.DurationSeconds)}
-          </Text>
-        </Pressable>
+        <Link
+          href={{
+            pathname: "/episode/[episodeid]",
+            params: { clipId: item.Id},
+          }}
+          asChild
+        >
+          <Pressable>
+            <Text style={styles.info}>
+              {item.Season && item.Episode
+                ? `S${item.Season} E${item.Episode} - `
+                : ""}
+              {formatDate(item.PublishedUtc)}
+            </Text>
+            <Text style={styles.title}>{item.Title}</Text>
+            <Text style={styles.duration}>
+              {formatDuration(item.DurationSeconds)}
+            </Text>
+          </Pressable>
+        </Link>
       </View>
       <View style={styles.playButtonContainer}>
-        <AntDesign name="playcircleo" style={styles.playButton} size={32} color="black"/>
+        <AntDesign
+          name="playcircleo"
+          style={styles.playButton}
+          size={32}
+          color="black"
+        />
       </View>
     </View>
-    // </Link>
   );
 }
 
@@ -55,6 +61,6 @@ const styles = StyleSheet.create({
   },
   playButtonContainer: {
     flex: 0.1,
-    paddingLeft: 8
-  }
+    paddingLeft: 8,
+  },
 });

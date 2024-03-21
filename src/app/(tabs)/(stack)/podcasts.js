@@ -29,7 +29,7 @@ export default function Podcasts() {
         renderItem={({ item }) => (
           <Link
             href={{
-              pathname: "/[podcastItem]",
+              pathname: `/${item.Name}`,
               params: { Name: item.Name, Id: item.Id },
             }}
             asChild

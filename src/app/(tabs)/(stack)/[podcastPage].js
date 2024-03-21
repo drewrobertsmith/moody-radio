@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams, usePathname } from "expo-router";
 import {
   useGetClipsByProgramId,
   useGetProgramById,
@@ -19,7 +19,7 @@ export default function PodcastPage() {
   const { Id } = useLocalSearchParams();
 
   const clipsQuery = useGetClipsByProgramId(Id);
-  const programQuery = useGetProgramById(Id);
+  //const programQuery = useGetProgramById(Id);
 
   if (clipsQuery.isPending) {
     return <ActivityIndicator size="large" />;
@@ -31,6 +31,7 @@ export default function PodcastPage() {
 
   return (
     <View style={{ flex: 1 }}>
+
       <View>
         {/* <Image
           source={{ uri: programQuery.data.ArtworkUrl }}
@@ -51,7 +52,6 @@ const styles = StyleSheet.create({
   //   shadowOffset: {
   //     width: 16,
   //     height: 16,
-      
   //   },
   // },
 });

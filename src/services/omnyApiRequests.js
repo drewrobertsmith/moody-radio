@@ -10,6 +10,7 @@ export function useGetPrograms() {
     queryKey: ["allPrograms"],
     queryFn: async () => {
       try {
+        console.log("getPrograms ran");
         const response = await axios.get(URL);
         const networkFilteredPrograms = response.data.Programs.filter(
           (n) => n.Network === "Moody Radio"
@@ -28,6 +29,7 @@ export function useGetProgramById(Id) {
     queryKey: ["programById", Id],
     queryFn: async () => {
       try {
+        console.log("getProgramsById ran");
         const response = await axios.get(URL + `/${Id}`);
         return response.data;
       } catch (err) {
@@ -43,8 +45,27 @@ export function useGetClipsByProgramId(Id) {
     queryKey: ["podcastEpisode", Id],
     queryFn: async () => {
       try {
+        console.log("getClipsByProgramsById ran");
         const response = await axios.get(URL + `/${Id}/clips`);
         return response.data.Clips;
+      } catch (err) {
+        console.error(err.toJSON());
+        throw err;
+      }
+    },
+  });
+}
+
+export function useGetClipById(clipId) {
+  return useQuery({
+    queryKey: ["clipById", clipId],
+    queryFn: async () => {
+      try {
+        console.log("getClipsById ran");
+        const response = await axios.get(
+          `${BASE_URL}/orgs/${ORG_ID}/clips/${clipId}`
+        );
+        return response.data;
       } catch (err) {
         console.error(err.toJSON());
         throw err;
