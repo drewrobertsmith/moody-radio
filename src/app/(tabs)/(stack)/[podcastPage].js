@@ -1,19 +1,8 @@
-import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import { Link, useLocalSearchParams, usePathname } from "expo-router";
-import {
-  useGetClipsByProgramId,
-  useGetProgramById,
-} from "../../../services/omnyApiRequests";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 import PodcastEpisodesFeed from "../../../components/podcastEpisodesFeed";
+import { useGetClipsByProgramId } from "../../../services/omnyApiRequests";
+import { useLocalSearchParams } from "expo-router";
 
 export default function PodcastPage() {
   const { Id } = useLocalSearchParams();
@@ -29,16 +18,28 @@ export default function PodcastPage() {
     return <Text>Error: {error.message}</Text>;
   }
 
+  let buttonStatus;
+  clipsQuery.isFetchingNextPage
+    ? (buttonStatus = "Loading more...")
+    : clipsQuery.hasNextPage
+    ? (buttonStatus = "Load More")
+    : (buttonStatus = "Nothing more to load");
+
   return (
     <View style={{ flex: 1 }}>
-
       <View>
         {/* <Image
           source={{ uri: programQuery.data.ArtworkUrl }}
           style={styles.programImage}
         /> */}
+        {/* <Button
+          title={buttonStatus}
+          onPress={() => clipsQuery.fetchNextPage()}
+          disabled={!clipsQuery.hasNextPage || clipsQuery.isFetchingNextPage}
+        /> */}
       </View>
       <PodcastEpisodesFeed data={clipsQuery.data} />
+      {/* <PodcastEpisodesFeed data={clipsQuery.data} isFetching={clipsQuery.isFetching} fetchNextPage={clipsQuery.fetchNextPage()} /> */}
     </View>
   );
 }

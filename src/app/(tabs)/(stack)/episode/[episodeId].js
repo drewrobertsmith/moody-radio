@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  StyleSheet,
   Text,
   View,
   useWindowDimensions,
@@ -24,8 +25,21 @@ export default function EpisodePage() {
         <RenderHTML
           contentWidth={window.width}
           source={{ html: clipsQuery.data.DescriptionHtml }}
+          baseStyle={styles.description}
+          tagsStyles={tagsStyles}
         />
       </View>
     );
   }
 }
+const tagsStyles = {
+  a: {
+    color: "#74a433",
+  },
+};
+
+const styles = StyleSheet.create({
+  description: {
+    padding: 8,
+  },
+});

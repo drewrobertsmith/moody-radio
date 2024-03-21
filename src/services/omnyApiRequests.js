@@ -1,5 +1,6 @@
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
 
 const BASE_URL = "https://api.omny.fm";
 const ORG_ID = "a8cdbf10-d816-4c77-9e79-aa1c012547e1";
@@ -53,6 +54,26 @@ export function useGetClipsByProgramId(Id) {
         throw err;
       }
     },
+  });
+}
+
+export function useInfiniteGetClipsByProgram(Id) {
+  return useInfiniteQuery({
+    queryKey: ["podcastEpisodes", Id],
+    queryFn: async ({ pageParam }) => {
+      try {
+        console.log("InfiniteGetClipsByProgramsById ran");
+        const response = await axios.get(
+          URL + `/${Id}/clips?cursor=${pageParam}&pageSize=5`
+        );
+        return response.data.Clips;
+      } catch (err) {
+        console.error(err.toJSON());
+        throw err;
+      }
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
   });
 }
 

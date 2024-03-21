@@ -7,6 +7,7 @@ import {
   View,
 } from "react-native";
 
+import { FlashList } from "@shopify/flash-list";
 import { Link } from "expo-router";
 import { useGetPrograms } from "../../../services/omnyApiRequests";
 
@@ -23,9 +24,10 @@ export default function Podcasts() {
 
   return (
     <View style={{ flex: 1 }}>
-      <FlatList
+      <FlashList
         data={data}
         keyExtractor={(item) => item.Id}
+        estimatedItemSize={37}
         renderItem={({ item }) => (
           <Link
             href={{
