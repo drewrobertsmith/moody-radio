@@ -1,4 +1,4 @@
-import { ActivityIndicator, Text } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 import {
   addTracks,
   playbackService,
@@ -6,6 +6,7 @@ import {
 } from "../../../trackPlayerServices";
 import { useEffect, useState } from "react";
 
+import MiniPlayer from "../../components/miniPlayer";
 import TrackPlayer from "react-native-track-player";
 
 TrackPlayer.registerPlaybackService(() => playbackService);

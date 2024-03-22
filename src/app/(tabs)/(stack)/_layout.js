@@ -5,8 +5,6 @@ import { Text } from "react-native";
 export default function PodcastLayout() {
   const loc = useLocalSearchParams();
   const glob = useGlobalSearchParams();
-  console.log("local", loc);
-  console.log("global", glob);
 
   return (
     <Stack>

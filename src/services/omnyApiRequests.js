@@ -84,7 +84,7 @@ export function useGetClipById(clipId) {
       try {
         console.log("getClipsById ran");
         const response = await axios.get(
-          `${BASE_URL}/orgs/${ORG_ID}/clips/${clipId}`
+          `${BASE_URL}/orgs/${ORG_ID}/clips/${clipId}?includeProgramDetail=true`
         );
         return response.data;
       } catch (err) {
