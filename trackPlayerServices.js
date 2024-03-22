@@ -43,15 +43,15 @@ export async function addTracks() {
   await TrackPlayer.setRepeatMode(RepeatMode.Off);
 }
 
-// export async function playTrack({item}) {
-//   await TrackPlayer.load({
-//     id: item.Id,
-//     url: item.AudioUrl,
-//     title: item.Title,
-//     artist: item.ProgramSlug,
-//   });
-//   await TrackPlayer.play();
-// }
+export async function playTrack(item) {
+  await TrackPlayer.load({
+    id: item.Id,
+    url: item.AudioUrl,
+    title: item.Title,
+    artist: item.ProgramSlug,
+  });
+  await TrackPlayer.play();
+}
 
 export async function playbackService() {
   //these are remote events to listen to from places where the ui IS NOT MOUNTED: android auto, lockscreen, notifications, bluetooth headset etc

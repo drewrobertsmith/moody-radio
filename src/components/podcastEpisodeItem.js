@@ -1,8 +1,8 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { formatDate, formatDuration } from "../services/formatters";
 
-import { AntDesign } from "@expo/vector-icons";
 import { Link } from "expo-router";
+import PlayButton from "./playButton";
 
 export default function PodcastEpisodeItem({ item }) {
   return (
@@ -11,7 +11,7 @@ export default function PodcastEpisodeItem({ item }) {
         <Link
           href={{
             pathname: "/episode/[episodeid]",
-            params: { clipId: item.Id},
+            params: { clipId: item.Id },
           }}
           asChild
         >
@@ -30,12 +30,7 @@ export default function PodcastEpisodeItem({ item }) {
         </Link>
       </View>
       <View style={styles.playButtonContainer}>
-        <AntDesign
-          name="playcircleo"
-          style={styles.playButton}
-          size={32}
-          color="black"
-        />
+        <PlayButton item={item} />
       </View>
     </View>
   );

@@ -9,7 +9,10 @@ import {
 } from "react-native";
 
 import { AntDesign } from "@expo/vector-icons";
+import PlayButton from "../../../../components/playButton";
 import RenderHTML from "react-native-render-html";
+import TrackPlayer from "react-native-track-player";
+import { playTrack } from "../../../../../trackPlayerServices";
 import { useGetClipById } from "../../../../services/omnyApiRequests";
 import { useLocalSearchParams } from "expo-router";
 
@@ -32,16 +35,11 @@ export default function EpisodePage() {
             height={window.width}
           />
         </View>
-        <View style={{ alignItems: "center", paddingTop: 8}}>
+        <View style={{ alignItems: "center", paddingTop: 8 }}>
           <Text>{clipsQuery.data.Title}</Text>
           <Text>{clipsQuery.data.Program.Name} </Text>
-          <View style={{paddingTop: 8}}>
-            <AntDesign
-              name="playcircleo"
-              style={styles.playButton}
-              size={48}
-              color="black"
-            />
+          <View style={{ paddingTop: 8 }}>
+            <PlayButton item={clipsQuery.data}/>
           </View>
         </View>
         <RenderHTML

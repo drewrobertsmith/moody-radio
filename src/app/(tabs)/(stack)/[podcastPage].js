@@ -18,13 +18,6 @@ export default function PodcastPage() {
     return <Text>Error: {error.message}</Text>;
   }
 
-  let buttonStatus;
-  clipsQuery.isFetchingNextPage
-    ? (buttonStatus = "Loading more...")
-    : clipsQuery.hasNextPage
-    ? (buttonStatus = "Load More")
-    : (buttonStatus = "Nothing more to load");
-
   return (
     <View style={{ flex: 1 }}>
       <View>
