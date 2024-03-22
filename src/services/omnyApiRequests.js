@@ -11,14 +11,14 @@ export function useGetPrograms() {
     queryKey: ["allPrograms"],
     queryFn: async () => {
       try {
-        console.log("getPrograms ran");
         const response = await axios.get(URL);
         const networkFilteredPrograms = response.data.Programs.filter(
           (n) => n.Network === "Moody Radio"
-        );
-        return networkFilteredPrograms;
+          );
+          console.log("Get programs query ran");
+          return networkFilteredPrograms;
       } catch (err) {
-        console.error(err.toJSON());
+        console.error(err);
         throw err;
       }
     },
