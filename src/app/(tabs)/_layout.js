@@ -1,10 +1,10 @@
-import MiniPlayer from "../../components/miniPlayer";
+import MiniPlayerContainer from "../../components/miniPlayer/miniPlayerContainer";
 import { Tabs } from "expo-router";
 
 export default function TabLayout() {
   return (
     /* Adding the Miniplayer component this way feels wrong but it works */
-    <Tabs tabBar={(props) => <MiniPlayer {...props} />}> 
+    <Tabs tabBar={(props) => <MiniPlayerContainer {...props} />}> 
       <Tabs.Screen
         name="index"
         options={{

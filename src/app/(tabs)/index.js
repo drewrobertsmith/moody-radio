@@ -6,7 +6,6 @@ import {
 } from "../../../trackPlayerServices";
 import { useEffect, useState } from "react";
 
-import MiniPlayer from "../../components/miniPlayer";
 import TrackPlayer from "react-native-track-player";
 
 TrackPlayer.registerPlaybackService(() => playbackService);

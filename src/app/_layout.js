@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import MiniPlayer from "../components/miniPlayer";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Stack } from "expo-router";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";

@@ -27,7 +27,8 @@ export async function setupPlayer() {
       compactCapabilities: [
         Capability.Play,
         Capability.Pause,
-        Capability.SkipToNext,
+        Capability.JumpForward,
+        Capability.JumpBackward,
       ],
       progressUpdateEventInterval: 1,
     });
@@ -49,6 +50,7 @@ export async function playTrack(item) {
     url: item.AudioUrl,
     title: item.Title,
     artist: item.ProgramSlug,
+    artwork: item.ImageUrl,
   });
   await TrackPlayer.play();
 }
@@ -65,9 +67,13 @@ export async function playbackService() {
     TrackPlayer.play();
   });
 
-  TrackPlayer.addEventListener(Event.RemoteNext, () => {
-    console.log("Event.RemoteNext");
-    TrackPlayer.skipToNext();
+  TrackPlayer.addEventListener(Event.RemoteJumpForward, () => {
+    console.log("Event.RemoteJumpForward");
+    TrackPlayer.seekBy(30); 
+  });
+  TrackPlayer.addEventListener(Event.RemoteJumpBackward, () => {
+    console.log("Event.RemoteJumpBackward");
+    TrackPlayer.seekBy(-30); 
   });
 
   TrackPlayer.addEventListener(Event.RemotePrevious, () => {
