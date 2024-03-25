@@ -1,11 +1,11 @@
-import { FlatList, View } from "react-native";
-
 import { FlashList } from "@shopify/flash-list";
 import PodcastEpisodeItem from "./podcastEpisodeItem";
+import { View } from "react-native";
 
 export default function PodcastEpisodesFeed({
   data,
   isFetching,
+  hasNextPage,
   fetchNextPage,
 }) {
   return (
@@ -14,8 +14,10 @@ export default function PodcastEpisodesFeed({
         data={data}
         keyExtractor={(item) => item.Id}
         renderItem={({ item }) => <PodcastEpisodeItem item={item} />}
-        estimatedItemSize={74}
-        //onEndReached={() => !isFetching && fetchNextPage}
+        estimatedItemSize={63}
+        refreshing={isFetching}
+        onEndReached={hasNextPage ? () => fetchNextPage() : null}
+        onEndReachedThreshold={0.5}
       />
     </View>
   );

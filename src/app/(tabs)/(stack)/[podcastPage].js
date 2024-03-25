@@ -1,38 +1,49 @@
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Button,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 import PodcastEpisodesFeed from "../../../components/podcastEpisodesFeed";
-import { useGetClipsByProgramId } from "../../../services/omnyApiRequests";
+import { useInfiniteGetClipsByProgram } from "../../../services/omnyApiRequests";
 import { useLocalSearchParams } from "expo-router";
 
 export default function PodcastPage() {
   const { Id } = useLocalSearchParams();
 
-  const clipsQuery = useGetClipsByProgramId(Id);
+  //const clipsQuery = useGetClipsByProgramId(Id);
   //const programQuery = useGetProgramById(Id);
 
-  if (clipsQuery.isPending) {
-    return <ActivityIndicator size="large" />;
-  }
+  const {
+    data,
+    isPending,
+    error,
+    isFetching,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteGetClipsByProgram(Id);
 
-  if (clipsQuery.error) {
+  //page.Clips was the missing piece to deal with Omy APIs weird structure
+  const clipData = data?.pages.flatMap((page) => page.Clips) ?? [];
+
+  if (isPending) {
+    return <ActivityIndicator size="large" />;
+  } else if (error) {
     return <Text>Error: {error.message}</Text>;
   }
 
   return (
     <View style={{ flex: 1 }}>
-      <View>
-        {/* <Image
-          source={{ uri: programQuery.data.ArtworkUrl }}
-          style={styles.programImage}
-        /> */}
-        {/* <Button
-          title={buttonStatus}
-          onPress={() => clipsQuery.fetchNextPage()}
-          disabled={!clipsQuery.hasNextPage || clipsQuery.isFetchingNextPage}
-        /> */}
-      </View>
-      <PodcastEpisodesFeed data={clipsQuery.data} />
-      {/* <PodcastEpisodesFeed data={clipsQuery.data} isFetching={clipsQuery.isFetching} fetchNextPage={clipsQuery.fetchNextPage()} /> */}
+      <PodcastEpisodesFeed
+        data={clipData}
+        isFetching={isFetching}
+        hasNextPage={hasNextPage}
+        fetchNextPage={fetchNextPage}
+      />
     </View>
   );
 }

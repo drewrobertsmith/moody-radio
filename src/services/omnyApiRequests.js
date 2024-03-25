@@ -14,9 +14,9 @@ export function useGetPrograms() {
         const response = await axios.get(URL);
         const networkFilteredPrograms = response.data.Programs.filter(
           (n) => n.Network === "Moody Radio"
-          );
-          console.log("Get programs query ran");
-          return networkFilteredPrograms;
+        );
+        console.log("Get programs query ran");
+        return networkFilteredPrograms;
       } catch (err) {
         console.error(err);
         throw err;
@@ -62,18 +62,24 @@ export function useInfiniteGetClipsByProgram(Id) {
     queryKey: ["podcastEpisodes", Id],
     queryFn: async ({ pageParam }) => {
       try {
-        console.log("InfiniteGetClipsByProgramsById ran");
-        const response = await axios.get(
-          URL + `/${Id}/clips?cursor=${pageParam}&pageSize=5`
+        console.log(
+          "InfiniteGetClipsByProgramsById ran",
+          "pagePAram",
+          pageParam
         );
-        return response.data.Clips;
+        const response = await axios.get(
+          URL + `/${Id}/clips?cursor=${pageParam}&pageSize=10`
+        );
+        return response.data;
       } catch (err) {
         console.error(err.toJSON());
         throw err;
       }
     },
     initialPageParam: 1,
-    getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.length === 0 ? null : allPages.length + 1;
+    },
   });
 }
 
