@@ -1,6 +1,8 @@
-import { Stack, useGlobalSearchParams, useLocalSearchParams } from "expo-router";
-
-import { Text } from "react-native";
+import {
+  Stack,
+  useGlobalSearchParams,
+  useLocalSearchParams,
+} from "expo-router";
 
 export default function PodcastLayout() {
   const loc = useLocalSearchParams();

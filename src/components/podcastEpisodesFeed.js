@@ -14,10 +14,10 @@ export default function PodcastEpisodesFeed({
         data={data}
         keyExtractor={(item) => item.Id}
         renderItem={({ item }) => <PodcastEpisodeItem item={item} />}
-        estimatedItemSize={63}
         refreshing={isFetching}
         onEndReached={hasNextPage ? () => fetchNextPage() : null}
         onEndReachedThreshold={0.5}
+        estimatedItemSize={76}
       />
     </View>
   );
