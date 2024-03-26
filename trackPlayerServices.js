@@ -69,11 +69,11 @@ export async function playbackService() {
 
   TrackPlayer.addEventListener(Event.RemoteJumpForward, () => {
     console.log("Event.RemoteJumpForward");
-    TrackPlayer.seekBy(30); 
+    TrackPlayer.seekBy(30);
   });
   TrackPlayer.addEventListener(Event.RemoteJumpBackward, () => {
     console.log("Event.RemoteJumpBackward");
-    TrackPlayer.seekBy(-30); 
+    TrackPlayer.seekBy(-30);
   });
 
   TrackPlayer.addEventListener(Event.RemotePrevious, () => {

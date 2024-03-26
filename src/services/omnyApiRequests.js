@@ -47,7 +47,7 @@ export function useGetClipsByProgramId(Id) {
     queryFn: async () => {
       try {
         console.log("getClipsByProgramsById ran");
-        const response = await axios.get(URL + `/${Id}/clips`);
+        const response = await axios.get(URL + `/${Id}/clips?includeProgramDetail=true`);
         return response.data.Clips;
       } catch (err) {
         console.error(err.toJSON());
