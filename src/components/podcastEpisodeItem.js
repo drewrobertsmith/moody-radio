@@ -1,10 +1,14 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { formatDate, formatDuration } from "../services/formatters";
+import { useActiveTrack, useProgress } from "react-native-track-player";
 
 import { Link } from "expo-router";
 import PlayButton from "./playButton";
 
 export default function PodcastEpisodeItem({ item }) {
+  const { position, buffered, duration } = useProgress();
+  const activeTrack = useActiveTrack();
+
   return (
     <View style={styles.container}>
       <View style={styles.episodeInfo}>
@@ -24,7 +28,9 @@ export default function PodcastEpisodeItem({ item }) {
             </Text>
             <Text style={styles.title}>{item.Title}</Text>
             <Text style={styles.duration}>
-              {formatDuration(item.DurationSeconds)}
+              {activeTrack && activeTrack.id === item.Id
+                ? `${formatDuration(duration - position)} left`
+                : formatDuration(item.DurationSeconds)}
             </Text>
           </Pressable>
         </Link>
