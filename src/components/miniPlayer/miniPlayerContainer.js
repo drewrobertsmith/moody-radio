@@ -1,6 +1,7 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { BottomTabBar } from "@react-navigation/bottom-tabs";
+import { Link } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import MiniPlayerControls from "./miniplayerControls";
 import { useActiveTrack } from "react-native-track-player";
@@ -28,12 +29,16 @@ export default function MiniPlayerContainer(props) {
 
   return (
     <>
-      <View style={styles.miniPlayerContainer}>
-        <MiniPlayerImageContainer />
-        <MiniPlayerControls />
-        <QueueButton />
-      </View>
-      <BottomTabBar {...props} />
+      <Link href="/expandedPlayer" asChild>
+        <Pressable>
+          <View style={styles.miniPlayerContainer}>
+            <MiniPlayerImageContainer />
+            <MiniPlayerControls />
+            <QueueButton />
+          </View>
+          <BottomTabBar {...props} />
+        </Pressable>
+      </Link>
     </>
   );
 }
@@ -52,6 +57,6 @@ const styles = StyleSheet.create({
   queueButtonContainer: {
     padding: 4,
     flex: 1,
-    alignItems: "flex-end"
+    alignItems: "flex-end",
   },
 });
