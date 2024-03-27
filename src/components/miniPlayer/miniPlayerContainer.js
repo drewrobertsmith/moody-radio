@@ -29,7 +29,7 @@ export default function MiniPlayerContainer(props) {
 
   return (
     <>
-      <Link href="/expandedPlayer" asChild>
+      <Link href="(playerStack)/expandedPlayer" asChild>
         <Pressable>
           <View style={styles.miniPlayerContainer}>
             <MiniPlayerImageContainer />

@@ -23,18 +23,8 @@ export default function AppLayout() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
-          name="expandedPlayer"
-          options={{
-            headerShown: false,
-            presentation: "modal",
-          }}
-        />
-        <Stack.Screen
-          name="queuePage"
-          options={{
-            headerShown: false,
-            presentation: "modal",
-          }}
+          name="(playerStack)"
+          options={{ presentation: "modal", headerShown: false }}
         />
       </Stack>
     </PersistQueryClientProvider>

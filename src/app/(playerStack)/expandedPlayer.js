@@ -1,22 +1,9 @@
-import {
-  FlatList,
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import TrackPlayer, {
-  useActiveTrack,
-  useIsPlaying,
-} from "react-native-track-player";
-import { useEffect, useState } from "react";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { useActiveTrack, useIsPlaying } from "react-native-track-player";
 
-import ExpandedPlayerControls from "../components/expandedPlayer/expandedPlayerControls";
+import ExpandedPlayerControls from "../../components/expandedPlayer/expandedPlayerControls";
 import { Link } from "expo-router";
-import ProgressBar from "../components/expandedPlayer/progressBar";
-import QueueFeed from "../components/expandedPlayer/queue/queueFeed";
+import ProgressBar from "../../components/expandedPlayer/progressBar";
 
 export default function ExpandedPlayer() {
   const activeTrack = useActiveTrack();
