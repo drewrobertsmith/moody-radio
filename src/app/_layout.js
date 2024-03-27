@@ -29,6 +29,13 @@ export default function AppLayout() {
             presentation: "modal",
           }}
         />
+        <Stack.Screen
+          name="queuePage"
+          options={{
+            headerShown: false,
+            presentation: "modal",
+          }}
+        />
       </Stack>
     </PersistQueryClientProvider>
   );

@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -13,22 +14,13 @@ import TrackPlayer, {
 import { useEffect, useState } from "react";
 
 import ExpandedPlayerControls from "../components/expandedPlayer/expandedPlayerControls";
+import { Link } from "expo-router";
 import ProgressBar from "../components/expandedPlayer/progressBar";
+import QueueFeed from "../components/expandedPlayer/queue/queueFeed";
 
 export default function ExpandedPlayer() {
-  const [queue, setQueue] = useState([]);
   const activeTrack = useActiveTrack();
   const isPlaying = useIsPlaying();
-  console.log(queue);
-
-  const loadPlaylist = async () => {
-    const q = await TrackPlayer.getQueue();
-    setQueue(q);
-  };
-
-  useEffect(() => {
-    loadPlaylist();
-  }, [queue]);
 
   const NowPlayingInfo = () => {
     return (
@@ -44,27 +36,22 @@ export default function ExpandedPlayer() {
     );
   };
 
-  const QueueFeed = () => {
-    return <Text>Queue Feed</Text>;
-  };
-
   return (
-    <ScrollView
-      style={styles.scrollView}
-      contentContainerStyle={styles.scrollContainerView}
-    >
+    <View style={styles.viewContainer}>
       <NowPlayingInfo />
       <ProgressBar />
       <ExpandedPlayerControls isPlaying={isPlaying} />
-      <QueueFeed />
-    </ScrollView>
+      <Link href="/queuePage" asChild>
+        <Pressable>
+          <Text>Queue Feed</Text>
+        </Pressable>
+      </Link>
+    </View>
   );
 }
 const styles = StyleSheet.create({
-  scrollView: {
+  viewContainer: {
     padding: 8,
-  },
-  scrollContainerView: {
     alignItems: "center",
     justifyContent: "space-evenly",
     flex: 1,

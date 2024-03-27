@@ -45,14 +45,28 @@ export async function addTracks() {
 }
 
 export async function playTrack(item) {
-  await TrackPlayer.load({
-    id: item.Id,
-    url: item.AudioUrl,
-    title: item.Title,
-    artist: item.ProgramSlug,
-    artwork: item.ImageUrl,
-  });
-  await TrackPlayer.play();
+  const queue = await TrackPlayer.getQueue();
+  const trackIndex = queue.findIndex((track) => track.id === item.id);
+
+  if (trackIndex === -1) {
+    await TrackPlayer.add(
+      {
+        id: item.Id,
+        url: item.AudioUrl,
+        title: item.Title,
+        artist: item.ProgramSlug,
+        artwork: item.ImageUrl,
+      },
+      0 //adds track to first position in queue
+    );
+    await TrackPlayer.skip(0);
+    await TrackPlayer.play();
+  } else if (trackIndex != -1) {
+    //if track is already in queue
+    await TrackPlayer.skip(trackIndex);
+    await TrackPlayer.move(trackIndex, 0);
+    await TrackPlayer.play();
+  }
 }
 
 export async function playbackService() {

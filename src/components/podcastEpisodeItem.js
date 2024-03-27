@@ -6,7 +6,7 @@ import { Link } from "expo-router";
 import PlayButton from "./playButton";
 
 export default function PodcastEpisodeItem({ item }) {
-  const { position, buffered, duration } = useProgress();
+  const { position, duration } = useProgress();
   const activeTrack = useActiveTrack();
 
   return (
