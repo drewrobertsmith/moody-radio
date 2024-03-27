@@ -1,80 +1,72 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import TrackPlayer, {
   useActiveTrack,
   useIsPlaying,
 } from "react-native-track-player";
+import { useEffect, useState } from "react";
 
-import { AntDesign } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-import PlayButton from "../components/playButton";
+import ExpandedPlayerControls from "../components/expandedPlayer/expandedPlayerControls";
 import ProgressBar from "../components/expandedPlayer/progressBar";
 
 export default function ExpandedPlayer() {
+  const [queue, setQueue] = useState([]);
   const activeTrack = useActiveTrack();
   const isPlaying = useIsPlaying();
+  console.log(queue);
 
-  async function handlePlayButtonPress() {
-    isPlaying && isPlaying.playing === true
-      ? TrackPlayer.pause()
-      : TrackPlayer.play();
-  }
+  const loadPlaylist = async () => {
+    const q = await TrackPlayer.getQueue();
+    setQueue(q);
+  };
 
-  let playIconState = "play"; // default state
-  //Determine isPlaying Status
-  if (isPlaying && isPlaying.bufferingDuringPlay === true) {
-    playIconState = "clockcircle";
-  } else if (isPlaying && isPlaying.playing === true) {
-    playIconState = "pausecircle";
-  }
+  useEffect(() => {
+    loadPlaylist();
+  }, [queue]);
+
+  const NowPlayingInfo = () => {
+    return (
+      <View style={{ alignItems: "center" }}>
+        <Image
+          source={{ uri: activeTrack && activeTrack.artwork }}
+          width={300}
+          height={300}
+        />
+        <Text>{activeTrack && activeTrack.title}</Text>
+        <Text>{activeTrack && activeTrack.artist}</Text>
+      </View>
+    );
+  };
+
+  const QueueFeed = () => {
+    return <Text>Queue Feed</Text>;
+  };
 
   return (
-    <View style={{ padding: 8, alignItems: "center" }}>
-      <Image
-        source={{ uri: activeTrack && activeTrack.artwork }}
-        width={300}
-        height={300}
-      />
-      <Text>{activeTrack && activeTrack.title}</Text>
-      <Text>{activeTrack && activeTrack.artist}</Text>
+    <ScrollView
+      style={styles.scrollView}
+      contentContainerStyle={styles.scrollContainerView}
+    >
+      <NowPlayingInfo />
       <ProgressBar />
-      <View style={{ flexDirection: "row" }}>
-        <MaterialIcons
-          name="replay-30"
-          size={32}
-          style={styles.controlIcons}
-          onPress={() => {
-            TrackPlayer.seekBy(-30);
-          }}
-        />
-        <AntDesign
-          name={playIconState}
-          size={44}
-          style={styles.controlIcons}
-          onPress={() => {
-            handlePlayButtonPress();
-          }}
-        />
-        <MaterialIcons
-          name="forward-30"
-          size={32}
-          style={styles.controlIcons}
-          onPress={() => {
-            TrackPlayer.seekBy(30);
-          }}
-        />
-      </View>
-    </View>
+      <ExpandedPlayerControls isPlaying={isPlaying} />
+      <QueueFeed />
+    </ScrollView>
   );
 }
 const styles = StyleSheet.create({
-  controlsContainer: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  controlIcons: {
-    color: "black",
+  scrollView: {
     padding: 8,
+  },
+  scrollContainerView: {
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    flex: 1,
   },
 });
