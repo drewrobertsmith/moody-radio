@@ -40,9 +40,6 @@ export default function PlayButton({ item }) {
       onPress={() => {
         handlePlayButtonPress();
       }}
-      onLongPress={() => {
-        TrackPlayer.stop();
-      }}
     />
   );
 }
