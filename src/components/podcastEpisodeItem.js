@@ -4,6 +4,7 @@ import { useActiveTrack, useProgress } from "react-native-track-player";
 
 import { Link } from "expo-router";
 import PlayButton from "./playButton";
+import QueueButton from "./queueButton";
 
 export default function PodcastEpisodeItem({ item }) {
   const { position, duration } = useProgress();
@@ -36,6 +37,7 @@ export default function PodcastEpisodeItem({ item }) {
         </Link>
       </View>
       <View style={styles.playButtonContainer}>
+        <QueueButton item={item}/>
         <PlayButton item={item} />
       </View>
     </View>
@@ -49,7 +51,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   episodeInfo: {
-    flex: 0.9,
+    flex: 3,
   },
   title: {
     fontWeight: "bold",
@@ -61,7 +63,9 @@ const styles = StyleSheet.create({
     fontSize: 11,
   },
   playButtonContainer: {
-    flex: 0.1,
-    paddingLeft: 8,
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around"
   },
 });
