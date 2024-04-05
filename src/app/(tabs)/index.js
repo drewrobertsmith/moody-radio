@@ -29,6 +29,6 @@ export default function App() {
   if (!isPlayerReady) {
     return <ActivityIndicator size="large" />;
   } else {
-    return <Text>Stations</Text>;
+    return <Text>Hello World</Text>;
   }
 }

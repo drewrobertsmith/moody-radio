@@ -1,7 +1,4 @@
-import DraggableFlatList, {
-  ScaleDecorator,
-} from "react-native-draggable-flatlist";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, View } from "react-native";
 import TrackPlayer, {
   Event,
   useTrackPlayerEvents,

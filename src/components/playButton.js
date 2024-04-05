@@ -5,7 +5,7 @@ import TrackPlayer, {
 
 import { AntDesign } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
-import { playTrack } from "../../trackPlayerServices";
+import { handleAudioPlayback } from "../../trackPlayerServices";
 
 export default function PlayButton({ item }) {
   //recieves any playback item
@@ -16,7 +16,7 @@ export default function PlayButton({ item }) {
   async function handlePlayButtonPress() {
     activeTrack && activeTrack.id === item.Id && isPlaying.playing === true
       ? TrackPlayer.pause()
-      : playTrack(item);
+      : handleAudioPlayback("playButton", item);
   }
 
   let iconState = "play"; // Default state

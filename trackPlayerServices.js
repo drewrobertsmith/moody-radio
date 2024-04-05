@@ -5,6 +5,8 @@ import TrackPlayer, {
   RepeatMode,
 } from "react-native-track-player";
 
+import { Alert } from "react-native";
+
 export async function setupPlayer() {
   let isSetup = false;
   try {
@@ -44,11 +46,14 @@ export async function addTracks() {
   await TrackPlayer.setRepeatMode(RepeatMode.Off);
 }
 
-export async function playTrack(item) {
+//function to deal with handling incoming audio, be it from a play button or a queue button and where it ends up in the queue position
+export async function handleAudioPlayback(playbackAction, item) {
   const queue = await TrackPlayer.getQueue();
-  const trackIndex = queue.findIndex((track) => track.id === item.id);
+  const trackIndex = queue.findIndex((track) => track.id === item.Id);
 
-  if (trackIndex === -1) {
+  //if track is not in queue & playback initiated from playbutton
+  if (trackIndex === -1 && playbackAction === "playButton") {
+    //adds track to first position in queue
     await TrackPlayer.add(
       {
         id: item.Id,
@@ -56,16 +61,32 @@ export async function playTrack(item) {
         title: item.Title,
         artist: item.ProgramSlug,
         artwork: item.ImageUrl,
+        date: item.PublishedUtc,
+        duration: item.DurationSeconds,
       },
-      0 //adds track to first position in queue
+      0
     );
-    await TrackPlayer.skip(0);
-    await TrackPlayer.play();
-  } else if (trackIndex != -1) {
+    await TrackPlayer.skip(0); //skip to frist position in queue
+    await TrackPlayer.play(); //play track
+    //if not in queue and queue button pressed
+  } else if (trackIndex === -1 && playbackAction === "addToQueueButton") {
+    //adds track to last position in queue
+    await TrackPlayer.add({
+      id: item.Id,
+      url: item.AudioUrl,
+      title: item.Title,
+      artist: item.ProgramSlug,
+      artwork: item.ImageUrl,
+      date: item.PublishedUtc,
+      duration: item.DurationSeconds,
+    });
+  } else if (trackIndex != -1 && playbackAction === "playButton") {
     //if track is already in queue
-    await TrackPlayer.skip(trackIndex);
-    await TrackPlayer.move(trackIndex, 0);
-    await TrackPlayer.play();
+    await TrackPlayer.skip(trackIndex); //skip to track in queue
+    await TrackPlayer.move(trackIndex, 0); //move track item to first position
+    await TrackPlayer.play(); //play track
+  } else if (trackIndex != -1 && playbackAction === "addToQueueButton") {
+    Alert.alert("Episode is already in the queue!");
   }
 }
 
