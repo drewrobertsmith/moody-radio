@@ -1,24 +1,26 @@
-import {StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View } from "react-native";
 
-import React from 'react';
-import {useProgress} from 'react-native-track-player';
+import React from "react";
+import { useProgress } from "react-native-track-player";
 
 export default function ProgressBar() {
-  const {position, duration} = useProgress();
+  const { position, duration, buffered } = useProgress();
 
   function format(seconds) {
     let mins = parseInt(seconds / 60, 10)
       .toString()
-      .padStart(2, '0');
-    let sec = (Math.trunc(seconds) % 60).toString().padStart(2, '0');
+      .padStart(2, "0");
+    let sec = (Math.trunc(seconds) % 60).toString().padStart(2, "0");
     return `${mins}:${sec}`;
   }
 
   const progressWidth = duration > 0 ? (position / duration) * 100 : 0;
+  const bufferedWidth = duration > 0 ? (buffered / duration) * 100 : 0;
 
   return (
     <View style={styles.container}>
-      <View style={[styles.progressBar, {width: `${progressWidth}%`}]} />
+      <View style={[styles.bufferBar, { width: `${bufferedWidth}%` }]} />
+      <View style={[styles.progressBar, { width: `${progressWidth}%` }]} />
       <Text style={styles.Progress}>
         {format(position)} / {format(duration)}
       </Text>
@@ -29,21 +31,28 @@ export default function ProgressBar() {
 const styles = StyleSheet.create({
   container: {
     height: 20,
-    width: '100%',
-    backgroundColor: '#e0e0e0', // Light gray background
+    width: "100%",
+    backgroundColor: "#e0e0e0", // Light gray background
     borderRadius: 10,
-    overflow: 'hidden',
+    overflow: "hidden",
     marginVertical: 8,
   },
+  bufferBar: {
+    height: "100%",
+    position: "absolute",
+    backgroundColor: "#E3ECFF",
+    borderRadius: 16,
+  },
   progressBar: {
-    height: '100%',
-    backgroundColor: '#3b5998', // Color of the filled part
+    height: "100%",
+    backgroundColor: "#3b5998", // Color of the filled part
+    position: "absolute",
     borderRadius: 16,
   },
   Progress: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 14,
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
   },
 });

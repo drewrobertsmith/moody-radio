@@ -13,7 +13,13 @@ export async function setupPlayer() {
     await TrackPlayer.getActiveTrack();
     isSetup = true;
   } catch {
-    await TrackPlayer.setupPlayer();
+    await TrackPlayer.setupPlayer(
+      //minBuffer: 15  //Minimum time in seconds that needs to be buffered -> 15 (android), automatic (ios)
+      //maxBuffer: 50 //Maximum time in seconds that needs to be buffered -> android only
+      //playBuffer: 2.5 //Minimum time in seconds that needs to be buffered to start playing -> android only
+      //backBuffer: 0 //Time in seconds that should be kept in the buffer behind the current playhead time. -> android only
+      //maxCacheSize: 0 //Maximum cache size in kilobytes	 -> android only
+    );
     await TrackPlayer.updateOptions({
       android: {
         appKilledPlaybackBehavior:
@@ -115,10 +121,20 @@ export async function playbackService() {
     console.log("Event.RemotePrevious");
     TrackPlayer.skipToPrevious();
   });
-  TrackPlayer.addEventListener(Event.PlaybackProgressUpdated, () => {
-    console.log("Playback progress updated");
+  TrackPlayer.addEventListener(Event.PlaybackProgressUpdated, async (data) => {
+    console.log(data.position, data.duration, data.track);
   });
-  TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, () => {
-    console.log("Playback Active Tracked Changed");
-  });
+
+  TrackPlayer.addEventListener(
+    Event.PlaybackActiveTrackChanged,
+    async (activeTrack) => {
+      console.log(
+        "last Track",
+        activeTrack.lastIndex,
+        activeTrack.lastTrack,
+        activeTrack.lastPosition
+      );
+      console.log("current Track", activeTrack.index, activeTrack.track);
+    }
+  );
 }
