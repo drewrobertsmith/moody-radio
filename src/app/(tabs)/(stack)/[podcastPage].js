@@ -1,21 +1,19 @@
 import {
   ActivityIndicator,
-  Button,
-  FlatList,
+  Image,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import { useGetClipsByProgramId, useGetProgramById, useInfiniteGetClipsByProgram } from "../../../services/omnyApiRequests";
 
 import PodcastEpisodesFeed from "../../../components/podcastEpisodesFeed";
-import { useInfiniteGetClipsByProgram } from "../../../services/omnyApiRequests";
 import { useLocalSearchParams } from "expo-router";
 
 export default function PodcastPage() {
   const { Id } = useLocalSearchParams();
 
-  //const clipsQuery = useGetClipsByProgramId(Id);
-  //const programQuery = useGetProgramById(Id);
+  const programQuery = useGetProgramById(Id);
 
   const {
     data,
@@ -24,7 +22,6 @@ export default function PodcastPage() {
     isFetching,
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage,
   } = useInfiniteGetClipsByProgram(Id);
 
   //page.Clips was the missing piece to deal with Omy APIs weird structure
@@ -39,6 +36,7 @@ export default function PodcastPage() {
   return (
     <View style={{ flex: 1 }}>
       <PodcastEpisodesFeed
+        programQuery={programQuery}
         data={clipData}
         isFetching={isFetching}
         hasNextPage={hasNextPage}
@@ -47,16 +45,3 @@ export default function PodcastPage() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  // programImage: {
-  //   resizeMode: "contain",
-  //   height: 200,
-  //   width: "100%",
-  //   shadowColor: "blue",
-  //   shadowOffset: {
-  //     width: 16,
-  //     height: 16,
-  //   },
-  // },
-});

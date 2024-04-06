@@ -1,16 +1,23 @@
+import { StyleSheet, View } from "react-native";
+
 import { FlashList } from "@shopify/flash-list";
 import PodcastEpisodeItem from "./podcastEpisodeItem";
-import { View } from "react-native";
+import PodcastPageHeaderInfo from "./podcastPageInfoHeader";
 
 export default function PodcastEpisodesFeed({
   data,
   isFetching,
   hasNextPage,
   fetchNextPage,
+  programQuery,
 }) {
   return (
     <View style={{ flex: 1 }}>
       <FlashList
+        ListHeaderComponent={
+          <PodcastPageHeaderInfo programQuery={programQuery} />
+        }
+        ListHeaderComponentStyle={styles.header}
         data={data}
         keyExtractor={(item) => item.Id}
         renderItem={({ item }) => <PodcastEpisodeItem item={item} />}
@@ -22,3 +29,9 @@ export default function PodcastEpisodesFeed({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    padding: 8,
+  },
+});
