@@ -5,29 +5,33 @@ import TrackPlayer, {
 } from "react-native-track-player";
 import { useEffect, useState } from "react";
 
+import EmptyQueue from "./emptyQueueMessage";
+import QueueHeader from "./queueHeader";
 import QueueItem from "./queueItem";
+import { useQuery } from "@tanstack/react-query";
 
 export default function QueueFeed() {
-  const [queue, setQueue] = useState([]);
   const [currentTrack, setCurrentTrack] = useState(0);
 
-  //get queue items form trackplayer
-  const loadPlaylist = async () => {
-    const initialQueueList = await TrackPlayer.getQueue();
-    setQueue(initialQueueList);
-  };
-
-  //load trackplayer queue item
-  useEffect(() => {
-    loadPlaylist();
-  }, [queue]);
+  const { data } = useQuery({
+    queryKey: ["queueList"],
+    queryFn: async () => {
+      try {
+        const data = await TrackPlayer.getQueue();
+        return data;
+      } catch (e) {
+        console.error(e);
+        throw e;
+      }
+    },
+    notifyOnChangeProps: "all",
+  });
 
   useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async (event) => {
     if (event.type === Event.PlaybackActiveTrackChanged) {
       let index = await TrackPlayer.getActiveTrackIndex();
       if (currentTrack !== index) {
         setCurrentTrack(index);
-        loadPlaylist();
       }
     }
   });
@@ -41,7 +45,7 @@ export default function QueueFeed() {
         renderItem={QueueItem}
       /> */}
       <FlatList
-        data={queue}
+        data={data}
         keyExtractor={(item) => item.id}
         renderItem={({ item, index }) => (
           <QueueItem
@@ -50,6 +54,8 @@ export default function QueueFeed() {
             isCurrent={currentTrack === index}
           />
         )}
+        ListEmptyComponent={EmptyQueue}
+        ListHeaderComponent={QueueHeader}
       />
     </View>
   );

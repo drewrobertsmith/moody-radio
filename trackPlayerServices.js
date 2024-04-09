@@ -6,6 +6,7 @@ import TrackPlayer, {
 } from "react-native-track-player";
 
 import { Alert } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export async function setupPlayer() {
   let isSetup = false;
@@ -53,18 +54,12 @@ export async function addTracks() {
   await TrackPlayer.setRepeatMode(RepeatMode.Off);
 }
 
-// const storeQueueData = async () => {
-//   try {
-//     const jsonValue = JSON.stringify()
-//   }
-// }
-
 //function to deal with handling incoming audio, be it from a play button or a queue button and where it ends up in the queue position
 export async function handleAudioPlayback(playbackAction, item) {
   const queue = await TrackPlayer.getQueue();
   const trackIndex = queue.findIndex((track) => track.id === item.Id);
 
-  //this is the track object for any new episodes
+  //this is the track object for any new tracks
   const trackObject = {
     id: item.Id,
     url: item.AudioUrl,
@@ -75,22 +70,40 @@ export async function handleAudioPlayback(playbackAction, item) {
     duration: item.DurationSeconds,
   };
 
+  const storeQueueData = async (trackObject) => {
+    try {
+      const jsonValue = JSON.stringify(trackObject);
+      await AsyncStorage.setItem("queue-data", jsonValue);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const getStoredQueueData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("queue-data");
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   //if track is not in queue & playback initiated from playbutton
   if (trackIndex === -1 && playbackAction === "playButton") {
-    //adds track to first position in queue
-    await TrackPlayer.add(trackObject, 0);
+    await TrackPlayer.add(trackObject, 0); //adds track to first position in queue
     await TrackPlayer.skip(0); //skip to frist position in queue
     await TrackPlayer.play(); //play track
-
+    storeQueueData(trackObject);
     //if not in queue and queue button pressed
   } else if (trackIndex === -1 && playbackAction === "addToQueueButton") {
-    //adds track to last position in queue
-    await TrackPlayer.add(trackObject);
+    await TrackPlayer.add(trackObject); //adds track to the queue in the last position
+    storeQueueData(trackObject);
+    //if track is already in queue and action is play
   } else if (trackIndex != -1 && playbackAction === "playButton") {
-    //if track is already in queue
     await TrackPlayer.skip(trackIndex); //skip to track in queue
     await TrackPlayer.move(trackIndex, 0); //move track item to first position
     await TrackPlayer.play(); //play track
+    //if track is already in queue and action is queue
   } else if (trackIndex != -1 && playbackAction === "addToQueueButton") {
     Alert.alert("Episode is already in the queue!");
   }
@@ -128,12 +141,12 @@ export async function playbackService() {
   TrackPlayer.addEventListener(
     Event.PlaybackActiveTrackChanged,
     async (activeTrack) => {
-      console.log(
-        "last Track",
-        activeTrack.lastIndex,
-        activeTrack.lastTrack,
-        activeTrack.lastPosition
-      );
+      // console.log(
+      //   "last Track",
+      //   activeTrack.lastIndex,
+      //   activeTrack.lastTrack,
+      //   activeTrack.lastPosition
+      // );
       console.log("current Track", activeTrack.index, activeTrack.track);
     }
   );

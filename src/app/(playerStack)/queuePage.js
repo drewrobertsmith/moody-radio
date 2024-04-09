@@ -5,7 +5,6 @@ import QueueFeed from "../../components/expandedPlayer/queue/queueFeed";
 export default function QueuePage() {
   return (
     <View style={styles.container}>
-      <Text>Up Next</Text>
       <QueueFeed />
     </View>
   );
