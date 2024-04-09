@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 export default function QueueFeed() {
   const [currentTrack, setCurrentTrack] = useState(0);
 
-  const { data } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ["queueList"],
     queryFn: async () => {
       try {
@@ -52,6 +52,7 @@ export default function QueueFeed() {
             item={item}
             index={index}
             isCurrent={currentTrack === index}
+            refetch={refetch()}
           />
         )}
         ListEmptyComponent={EmptyQueue}

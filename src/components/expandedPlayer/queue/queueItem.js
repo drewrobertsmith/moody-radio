@@ -11,8 +11,9 @@ import { formatDate, formatDuration } from "../../../services/formatters";
 
 import { ScaleDecorator } from "react-native-draggable-flatlist";
 
-export default function QueueItem({ item, index, isCurrent, drag, isActive }) {
+export default function QueueItem({ item, index, isCurrent, drag, isActive, refetch }) {
   async function handleItemPress() {
+    refetch;
     await TrackPlayer.skip(index); //skips to selected track in queue,
     await TrackPlayer.move(index, 0); //moves selected track to top position
     await TrackPlayer.play(); //begins playing slected track
