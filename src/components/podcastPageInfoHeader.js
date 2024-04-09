@@ -1,5 +1,7 @@
 import { Button, Image, StyleSheet, Text, View } from "react-native";
 
+import { AntDesign } from "@expo/vector-icons";
+
 export default function PodcastPageHeaderInfo({ programQuery }) {
   return (
     <View styles={styles.container}>
@@ -8,7 +10,7 @@ export default function PodcastPageHeaderInfo({ programQuery }) {
           style={styles.programImage}
           source={{ uri: programQuery.data.ArtworkUrl }}
         />
-        <Button title="Subscribe" onPress={() => {}} />
+        {/* <AntDesign name="download" size={24} color="black" onPress={() => {}} /> */}
       </View>
       <Text>{programQuery.data.Name}</Text>
       <Text>{programQuery.data.Description}</Text>
@@ -19,12 +21,7 @@ export default function PodcastPageHeaderInfo({ programQuery }) {
 const styles = StyleSheet.create({
   programImage: {
     resizeMode: "contain",
-    height: 200,
+    height: 150,
     width: "100%",
-    shadowColor: "blue",
-    shadowOffset: {
-      width: 16,
-      height: 16,
-    },
   },
 });
