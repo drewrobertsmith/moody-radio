@@ -54,13 +54,14 @@ const styles = StyleSheet.create({
     flex: 3,
   },
   title: {
+    fontSize: 16,
     fontWeight: "bold",
   },
   info: {
-    fontSize: 11,
+    fontSize: 14,
   },
   duration: {
-    fontSize: 11,
+    fontSize: 14,
   },
   playButtonContainer: {
     flex: 1,

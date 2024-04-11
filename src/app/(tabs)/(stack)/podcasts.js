@@ -40,7 +40,12 @@ export default function Podcasts() {
       >
         <Pressable>
           <View style={styles.listItemContainer}>
-            <Image source={{ uri: item.ArtworkUrl }} width={50} height={50} />
+            <Image
+              source={{ uri: item.ArtworkUrl }}
+              width={56}
+              height={56}
+              style={styles.listItemImage}
+            />
             <Text style={styles.title}>{item.Name}</Text>
           </View>
         </Pressable>
@@ -90,7 +95,7 @@ export default function Podcasts() {
         <FlashList
           data={data}
           keyExtractor={(item) => item.Id}
-          estimatedItemSize={58}
+          estimatedItemSize={64}
           renderItem={({ item }) => <PodcastListItem item={item} />}
           contentContainerStyle={styles.podcastFeedContainer}
         />
@@ -110,6 +115,11 @@ export default function Podcasts() {
 const styles = StyleSheet.create({
   title: {
     paddingLeft: 8,
+    fontSize: 16,
+  },
+  listItemImage: {
+    borderRadius: 8,
+    paddingRight: 8,
   },
   podcastFeedContainer: {
     padding: 8,

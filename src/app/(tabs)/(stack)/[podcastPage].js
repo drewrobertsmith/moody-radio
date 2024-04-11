@@ -24,7 +24,7 @@ export default function PodcastPage() {
     hasNextPage,
   } = useInfiniteGetClipsByProgram(Id);
 
-  //page.Clips was the missing piece to deal with Omy APIs weird structure
+  //page.Clips was the missing piece to deal with Omy APIs weird structure by flattening out the array by a level after the Clips element
   const clipData = data?.pages.flatMap((page) => page.Clips) ?? [];
 
   if (isPending) {

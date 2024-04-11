@@ -24,7 +24,7 @@ export default function PodcastEpisodesFeed({
         refreshing={isFetching}
         onEndReached={hasNextPage ? () => fetchNextPage() : null}
         onEndReachedThreshold={0.5}
-        estimatedItemSize={76}
+        estimatedItemSize={82}
       />
     </View>
   );
@@ -32,6 +32,6 @@ export default function PodcastEpisodesFeed({
 
 const styles = StyleSheet.create({
   header: {
-    padding: 8,
+    padding: 16,
   },
 });
