@@ -1,5 +1,10 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { formatDate, formatDuration } from "../services/formatters";
+import {
+  formatDate,
+  formatDuration,
+  formatEpisodeType,
+  formatSeasonAndEpisode,
+} from "../services/formatters";
 import { useActiveTrack, useProgress } from "react-native-track-player";
 
 import { Link } from "expo-router";
@@ -22,9 +27,8 @@ export default function PodcastEpisodeItem({ item }) {
         >
           <Pressable>
             <Text style={styles.info}>
-              {item.Season && item.Episode
-                ? `S${item.Season} E${item.Episode} - `
-                : ""}
+              {formatEpisodeType(item.EpisodeType)}
+              {formatSeasonAndEpisode(item.Season, item.Episode)}
               {formatDate(item.PublishedUtc)}
             </Text>
             <Text style={styles.title}>{item.Title}</Text>
@@ -37,7 +41,7 @@ export default function PodcastEpisodeItem({ item }) {
         </Link>
       </View>
       <View style={styles.playButtonContainer}>
-        <QueueButton item={item}/>
+        <QueueButton item={item} />
         <PlayButton item={item} />
       </View>
     </View>
@@ -67,6 +71,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-around"
+    justifyContent: "space-around",
   },
 });
