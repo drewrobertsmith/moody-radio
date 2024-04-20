@@ -15,7 +15,7 @@ export function useGetPrograms() {
         const networkFilteredPrograms = response.data.Programs.filter(
           (n) => n.Network === "Moody Radio"
         );
-        console.log("Get programs query ran");
+        //console.log("Get programs query ran");
         return networkFilteredPrograms;
       } catch (err) {
         console.error(err);
@@ -30,7 +30,7 @@ export function useGetProgramById(Id) {
     queryKey: ["programById", Id],
     queryFn: async () => {
       try {
-        console.log("getProgramsById ran");
+        //console.log("getProgramsById ran");
         const response = await axios.get(URL + `/${Id}`);
         return response.data;
       } catch (err) {
@@ -46,7 +46,7 @@ export function useGetClipsByProgramId(Id) {
     queryKey: ["podcastEpisode", Id],
     queryFn: async () => {
       try {
-        console.log("getClipsByProgramsById ran");
+        //console.log("getClipsByProgramsById ran");
         const response = await axios.get(URL + `/${Id}/clips?includeProgramDetail=true`);
         return response.data.Clips;
       } catch (err) {
@@ -62,11 +62,11 @@ export function useInfiniteGetClipsByProgram(Id) {
     queryKey: ["podcastEpisodes", Id],
     queryFn: async ({ pageParam }) => {
       try {
-        console.log(
-          "InfiniteGetClipsByProgramsById ran",
-          "pagePAram",
-          pageParam
-        );
+        // console.log(
+        //   "InfiniteGetClipsByProgramsById ran",
+        //   "pagePAram",
+        //   pageParam
+        // );
         const response = await axios.get(
           URL + `/${Id}/clips?cursor=${pageParam}&pageSize=10`
         );
@@ -88,7 +88,7 @@ export function useGetClipById(clipId) {
     queryKey: ["clipById", clipId],
     queryFn: async () => {
       try {
-        console.log("getClipsById ran");
+        //console.log("getClipsById ran");
         const response = await axios.get(
           `${BASE_URL}/orgs/${ORG_ID}/clips/${clipId}?includeProgramDetail=true`
         );

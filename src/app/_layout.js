@@ -8,19 +8,20 @@ import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persi
 
 export default function AppLayout() {
   const queryClient = new QueryClient({
-    defaultOptions: {
-      cacheTime: 1000 * 60 * 60 * 24, // 24 hours
-    },
+    // defaultOptions: {
+    //   cacheTime: 1000 * 60 * 60 * 24, // 24 hours
+    // },
   });
-  const asyncStoragePersister = createAsyncStoragePersister({
-    storage: AsyncStorage,
-  });
+  // const asyncStoragePersister = createAsyncStoragePersister({
+  //   storage: AsyncStorage,
+  // });
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <PersistQueryClientProvider
+      {/* <PersistQueryClientProvider */}
+      <QueryClientProvider
         client={queryClient}
-        persistOptions={{ persister: asyncStoragePersister }}
+        //persistOptions={{ persister: asyncStoragePersister }}
       >
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -29,7 +30,8 @@ export default function AppLayout() {
             options={{ presentation: "modal", headerShown: false }}
           />
         </Stack>
-      </PersistQueryClientProvider>
+      </QueryClientProvider>
+      {/* </PersistQueryClientProvider> */}
     </GestureHandlerRootView>
   );
 }

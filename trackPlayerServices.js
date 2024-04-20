@@ -70,34 +70,14 @@ export async function handleAudioPlayback(playbackAction, item) {
     duration: item.DurationSeconds,
   };
 
-  const storeQueueData = async (trackObject) => {
-    try {
-      const jsonValue = JSON.stringify(trackObject);
-      await AsyncStorage.setItem("queue-data", jsonValue);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const getStoredQueueData = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("queue-data");
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   //if track is not in queue & playback initiated from playbutton
   if (trackIndex === -1 && playbackAction === "playButton") {
     await TrackPlayer.add(trackObject, 0); //adds track to first position in queue
     await TrackPlayer.skip(0); //skip to frist position in queue
     await TrackPlayer.play(); //play track
-    storeQueueData(trackObject);
     //if not in queue and queue button pressed
   } else if (trackIndex === -1 && playbackAction === "addToQueueButton") {
     await TrackPlayer.add(trackObject); //adds track to the queue in the last position
-    storeQueueData(trackObject);
     //if track is already in queue and action is play
   } else if (trackIndex != -1 && playbackAction === "playButton") {
     await TrackPlayer.skip(trackIndex); //skip to track in queue
@@ -108,6 +88,51 @@ export async function handleAudioPlayback(playbackAction, item) {
     Alert.alert("Episode is already in the queue!");
   }
 }
+
+export const storePlaybackData = async (trackObject) => {
+  try {
+    const jsonValue = JSON.stringify(trackObject);
+    await AsyncStorage.setItem(`${trackObject.id}`, jsonValue);
+    console.log(`${trackObject.id} saved`);
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+const logAsyncStorage = async () => {
+  const keys = await AsyncStorage.getAllKeys();
+  keys.forEach(async (key) => {
+    const value = await AsyncStorage.getItem(key);
+    console.log(`Key: ${key}, Value: ${value}`);
+  });
+};
+logAsyncStorage();
+
+// const clearAll = async () => {
+//   try {
+//     await AsyncStorage.clear()
+//   } catch(e) {
+//     console.error(e);
+//   }
+//   console.log("AsyncStorage Cleared");
+// }
+// clearAll();
+
+const mergePlaybackData = async (trackObject) => {
+  const jsonValue = JSON.stringify(trackObject);
+  await AsyncStorage.mergeItem(`${trackObject.id}`, jsonValue);
+  const updatedTrack = await AsyncStorage.getItem(`${trackObject.id}`);
+  console.log("new an updated track ", updatedTrack);
+};
+
+// const getStoredPlaybackData = async () => {
+//   try {
+//     const jsonValue = await AsyncStorage.getItem(/*`${trackObject.id}`*/ "cd1fafc1-b429-438b-85ae-af7b0183b12b");
+//     return jsonValue != null ? JSON.parse(jsonValue) : null;
+//   } catch (e) {
+//     console.error(e);
+//   }
+// };
 
 export async function playbackService() {
   //these are remote events to listen to from places where the ui IS NOT MOUNTED: android auto, lockscreen, notifications, bluetooth headset etc
@@ -134,20 +159,32 @@ export async function playbackService() {
     console.log("Event.RemotePrevious");
     TrackPlayer.skipToPrevious();
   });
-  TrackPlayer.addEventListener(Event.PlaybackProgressUpdated, async (data) => {
-    console.log(data.position, data.duration, data.track);
-  });
+  TrackPlayer.addEventListener(
+    Event.PlaybackProgressUpdated,
+    async (playbackProgress) => {
+      console.log(
+        "Position: ",
+        playbackProgress.position,
+        "Duration: ",
+        playbackProgress.duration,
+        "Track: ",
+        playbackProgress.track
+      );
+      //await mergePlaybackData(playbackProgress.position);
+    }
+  );
 
   TrackPlayer.addEventListener(
     Event.PlaybackActiveTrackChanged,
     async (activeTrack) => {
-      // console.log(
-      //   "last Track",
-      //   activeTrack.lastIndex,
-      //   activeTrack.lastTrack,
-      //   activeTrack.lastPosition
-      // );
+      console.log(
+        "last Track",
+        activeTrack.lastIndex,
+        activeTrack.lastTrack,
+        activeTrack.lastPosition
+      );
       console.log("current Track", activeTrack.index, activeTrack.track);
+      await storePlaybackData(activeTrack.track);
     }
   );
 }
