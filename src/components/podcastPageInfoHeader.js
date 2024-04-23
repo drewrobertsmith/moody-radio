@@ -13,7 +13,7 @@ export default function PodcastPageHeaderInfo({ programQuery }) {
         source={{ uri: programQuery.data?.ArtworkUrl }}
       />
       {/* <AntDesign name="download" size={24} color="black" onPress={() => {}} /> */}
-      <Text style={styles.programTitle}>{programQuery.data.Name}</Text>
+      <Text style={styles.programTitle}>{programQuery.data?.Name}</Text>
 
       <Text
         style={styles.programDescription}
@@ -23,7 +23,7 @@ export default function PodcastPageHeaderInfo({ programQuery }) {
           numberOfLines != 2 ? setNumberOfLines(2) : setNumberOfLines(0)
         }}
       >
-        {programQuery.data.Description}
+        {programQuery.data?.Description}
       </Text>
     </View>
   );

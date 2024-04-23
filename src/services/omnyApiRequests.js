@@ -3,25 +3,28 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 const BASE_URL = "https://api.omny.fm";
-const ORG_ID = "a8cdbf10-d816-4c77-9e79-aa1c012547e1";
-const URL = `${BASE_URL}/orgs/${ORG_ID}/programs`;
+const ORG_ID = "/orgs/a8cdbf10-d816-4c77-9e79-aa1c012547e1";
+
+const axiosInstance = axios.create({
+  baseURL: BASE_URL + ORG_ID,
+});
 
 export function useGetPrograms() {
   return useQuery({
     queryKey: ["allPrograms"],
     queryFn: async () => {
       try {
-        const response = await axios.get(URL);
+        const response = await axiosInstance.get(`/programs`);
         const networkFilteredPrograms = response.data.Programs.filter(
           (n) => n.Network === "Moody Radio"
         );
-        //console.log("Get programs query ran");
         return networkFilteredPrograms;
       } catch (err) {
         console.error(err);
         throw err;
       }
     },
+    retry: 3, // Retry up to 3 times
   });
 }
 
@@ -30,30 +33,16 @@ export function useGetProgramById(Id) {
     queryKey: ["programById", Id],
     queryFn: async () => {
       try {
-        //console.log("getProgramsById ran");
-        const response = await axios.get(URL + `/${Id}`);
+        const response = await axiosInstance.get(`/programs/${Id}`, {
+          params: { Id },
+        });
         return response.data;
       } catch (err) {
         console.error(err.toJSON());
         throw err;
       }
     },
-  });
-}
-
-export function useGetClipsByProgramId(Id) {
-  return useQuery({
-    queryKey: ["podcastEpisode", Id],
-    queryFn: async () => {
-      try {
-        //console.log("getClipsByProgramsById ran");
-        const response = await axios.get(URL + `/${Id}/clips?includeProgramDetail=true`);
-        return response.data.Clips;
-      } catch (err) {
-        console.error(err.toJSON());
-        throw err;
-      }
-    },
+    retry: 3, // Retry up to 3 times
   });
 }
 
@@ -62,13 +51,11 @@ export function useInfiniteGetClipsByProgram(Id) {
     queryKey: ["podcastEpisodes", Id],
     queryFn: async ({ pageParam }) => {
       try {
-        // console.log(
-        //   "InfiniteGetClipsByProgramsById ran",
-        //   "pagePAram",
-        //   pageParam
-        // );
-        const response = await axios.get(
-          URL + `/${Id}/clips?cursor=${pageParam}&pageSize=10`
+        const response = await axiosInstance.get(
+          `/programs/${Id}/clips?cursor=${pageParam}&pageSize=10`,
+          {
+            params: { Id, pageParam },
+          }
         );
         return response.data;
       } catch (err) {
@@ -76,6 +63,7 @@ export function useInfiniteGetClipsByProgram(Id) {
         throw err;
       }
     },
+    retry: 3, // Retry up to 3 times
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.length === 0 ? null : allPages.length + 1;
@@ -88,9 +76,11 @@ export function useGetClipById(clipId) {
     queryKey: ["clipById", clipId],
     queryFn: async () => {
       try {
-        //console.log("getClipsById ran");
-        const response = await axios.get(
-          `${BASE_URL}/orgs/${ORG_ID}/clips/${clipId}?includeProgramDetail=true`
+        const response = await axiosInstance.get(
+          `/clips/${clipId}?includeProgramDetail=true`,
+          {
+            params: { clipId },
+          }
         );
         return response.data;
       } catch (err) {
@@ -98,5 +88,6 @@ export function useGetClipById(clipId) {
         throw err;
       }
     },
+    retry: 3, // Retry up to 3 times
   });
 }

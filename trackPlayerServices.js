@@ -75,17 +75,21 @@ export async function handleAudioPlayback(playbackAction, item) {
     await TrackPlayer.add(trackObject, 0); //adds track to first position in queue
     await TrackPlayer.skip(0); //skip to frist position in queue
     await TrackPlayer.play(); //play track
+    console.log("not in queue and action is play");
     //if not in queue and queue button pressed
   } else if (trackIndex === -1 && playbackAction === "addToQueueButton") {
     await TrackPlayer.add(trackObject); //adds track to the queue in the last position
+    console.log("not in queue and action is queue");
     //if track is already in queue and action is play
   } else if (trackIndex != -1 && playbackAction === "playButton") {
     await TrackPlayer.skip(trackIndex); //skip to track in queue
     await TrackPlayer.move(trackIndex, 0); //move track item to first position
     await TrackPlayer.play(); //play track
+    console.log("is in queue and action is play");
     //if track is already in queue and action is queue
   } else if (trackIndex != -1 && playbackAction === "addToQueueButton") {
     Alert.alert("Episode is already in the queue!");
+    console.log("is in queue and action is queue");
   }
 }
 
@@ -93,7 +97,7 @@ export const storePlaybackData = async (trackObject) => {
   try {
     const jsonValue = JSON.stringify(trackObject);
     await AsyncStorage.setItem(`${trackObject.id}`, jsonValue);
-    console.log(`${trackObject.id} saved`);
+    //console.log(`${trackObject.id} saved`);
   } catch (e) {
     console.error(e);
   }
@@ -103,7 +107,7 @@ const logAsyncStorage = async () => {
   const keys = await AsyncStorage.getAllKeys();
   keys.forEach(async (key) => {
     const value = await AsyncStorage.getItem(key);
-    console.log(`Key: ${key}, Value: ${value}`);
+    //console.log(`Key: ${key}, Value: ${value}`);
   });
 };
 logAsyncStorage();
@@ -122,7 +126,7 @@ const mergePlaybackData = async (trackObject) => {
   const jsonValue = JSON.stringify(trackObject);
   await AsyncStorage.mergeItem(`${trackObject.id}`, jsonValue);
   const updatedTrack = await AsyncStorage.getItem(`${trackObject.id}`);
-  console.log("new an updated track ", updatedTrack);
+  //console.log("new an updated track ", updatedTrack);
 };
 
 // const getStoredPlaybackData = async () => {
@@ -162,14 +166,14 @@ export async function playbackService() {
   TrackPlayer.addEventListener(
     Event.PlaybackProgressUpdated,
     async (playbackProgress) => {
-      console.log(
-        "Position: ",
-        playbackProgress.position,
-        "Duration: ",
-        playbackProgress.duration,
-        "Track: ",
-        playbackProgress.track
-      );
+      // console.log(
+      //   "Position: ",
+      //   playbackProgress.position,
+      //   "Duration: ",
+      //   playbackProgress.duration,
+      //   "Track: ",
+      //   playbackProgress.track
+      // );
       //await mergePlaybackData(playbackProgress.position);
     }
   );
@@ -177,13 +181,13 @@ export async function playbackService() {
   TrackPlayer.addEventListener(
     Event.PlaybackActiveTrackChanged,
     async (activeTrack) => {
-      console.log(
-        "last Track",
-        activeTrack.lastIndex,
-        activeTrack.lastTrack,
-        activeTrack.lastPosition
-      );
-      console.log("current Track", activeTrack.index, activeTrack.track);
+      // console.log(
+      //   "last Track",
+      //   activeTrack.lastIndex,
+      //   activeTrack.lastTrack,
+      //   activeTrack.lastPosition
+      // );
+      //console.log("current Track", activeTrack.index, activeTrack.track);
       await storePlaybackData(activeTrack.track);
     }
   );

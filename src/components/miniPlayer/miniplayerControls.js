@@ -9,44 +9,51 @@ export default function MiniPlayerControls() {
 
   async function handleMiniPlayerPlayButtonPress() {
     isPlaying && isPlaying.playing === true
-      ? TrackPlayer.pause()
-      : TrackPlayer.play();
+      ? await TrackPlayer.pause()
+      : await TrackPlayer.play();
   }
 
-  let miniPlayerPlayIconState = "play"; // default state
-  //Determine isPlaying Status
-  if (isPlaying && isPlaying.bufferingDuringPlay === true) {
+  let miniPlayerPlayIconState = isPlaying?.playing ? "pausecircle" : "play";
+  if (isPlaying?.bufferingDuringPlay) {
     miniPlayerPlayIconState = "clockcircle";
-  } else if (isPlaying && isPlaying.playing === true) {
-    miniPlayerPlayIconState = "pausecircle";
   }
+
+  const ReplayIcon = () => (
+    <MaterialIcons
+      name="replay-30"
+      size={32}
+      style={styles.controlIcons}
+      onPress={() => {
+        TrackPlayer.seekBy(-30);
+      }}
+    />
+  );
+
+  const PlayIcon = () => (
+    <AntDesign
+      name={miniPlayerPlayIconState}
+      size={44}
+      style={styles.controlIcons}
+      onPress={handleMiniPlayerPlayButtonPress}
+    />
+  );
+
+  const ForwardIcon = () => (
+    <MaterialIcons
+      name="forward-30"
+      size={32}
+      style={styles.controlIcons}
+      onPress={() => {
+        TrackPlayer.seekBy(30);
+      }}
+    />
+  );
 
   return (
     <View style={styles.controlsContainer}>
-      <MaterialIcons
-        name="replay-30"
-        size={32}
-        style={styles.controlIcons}
-        onPress={() => {
-          TrackPlayer.seekBy(-30);
-        }}
-      />
-      <AntDesign
-        name={miniPlayerPlayIconState}
-        size={44}
-        style={styles.controlIcons}
-        onPress={() => {
-          handleMiniPlayerPlayButtonPress();
-        }}
-      />
-      <MaterialIcons
-        name="forward-30"
-        size={32}
-        style={styles.controlIcons}
-        onPress={() => {
-          TrackPlayer.seekBy(30);
-        }}
-      />
+      <ReplayIcon />
+      <PlayIcon />
+      <ForwardIcon />
     </View>
   );
 }

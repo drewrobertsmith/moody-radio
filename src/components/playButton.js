@@ -4,37 +4,29 @@ import TrackPlayer, {
 } from "react-native-track-player";
 
 import { AntDesign } from "@expo/vector-icons";
-import { StyleSheet } from "react-native";
 import { handleAudioPlayback } from "../../trackPlayerServices";
+import { useCallback } from "react";
 
 export default function PlayButton({ item }) {
   //recieves any playback item
-
   const isPlaying = useIsPlaying();
   const activeTrack = useActiveTrack();
 
-  async function handlePlayButtonPress() {
+  const handlePlayButtonPress = useCallback(async () => {
     activeTrack && activeTrack.id === item.Id && isPlaying.playing === true
       ? TrackPlayer.pause()
       : handleAudioPlayback("playButton", item);
-  }
+  }, [activeTrack, isPlaying, item]);
 
-  let iconState = "play"; // Default state
-  // Check if the current item is the active track
-  if (activeTrack && activeTrack.id === item.Id) {
-    // Determine the iconState based on isPlaying status
-    if (isPlaying && isPlaying.bufferingDuringPlay === true) {
-      iconState = "clockcircle";
-    } else if (isPlaying.playing === true) {
-      iconState = "pausecircle";
-    }
-    // If none of the above conditions are true, the iconState remains "play"
+  let iconState =
+    isPlaying?.playing && activeTrack?.id === item.Id ? "pausecircle" : "play";
+  if (isPlaying?.bufferingDuringPlay && activeTrack?.id === item.Id) {
+    iconState = "clockcircle";
   }
 
   return (
     <AntDesign
       name={iconState}
-      style={styles.playButton}
       size={32}
       color="black"
       onPress={() => {
@@ -43,5 +35,3 @@ export default function PlayButton({ item }) {
     />
   );
 }
-
-const styles = StyleSheet.create({});
