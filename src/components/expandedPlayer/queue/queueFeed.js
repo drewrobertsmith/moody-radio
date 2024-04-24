@@ -3,7 +3,7 @@ import TrackPlayer, {
   Event,
   useTrackPlayerEvents,
 } from "react-native-track-player";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
 import EmptyQueue from "./emptyQueueMessage";
 import QueueHeader from "./queueHeader";
@@ -12,7 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export default function QueueFeed() {
   const [currentTrack, setCurrentTrack] = useState(0);
-
+  
 
   const { data, refetch } = useQuery({
     queryKey: ["queueList"],
@@ -37,26 +37,24 @@ export default function QueueFeed() {
     }
   });
 
+  const renderItem = ({ item, index }) => (
+    <QueueItem
+      item={item}
+      index={index}
+      isCurrent={currentTrack === index}
+      refetch={refetch()}
+    />
+  );
+
   return (
     <View style={{ flex: 1 }}>
-      {/* <DraggableFlatList
-        data={data}
-        onDragEnd={({ data }) => setData(data)}
-        keyExtractor={(item) => item.id}
-        renderItem={QueueItem}
-      /> */}
       <FlatList
         data={data}
         keyExtractor={(item) => item.id}
-        renderItem={({ item, index }) => (
-          <QueueItem
-            item={item}
-            index={index}
-            isCurrent={currentTrack === index}
-            refetch={refetch()}
-          />
-        )}
-        ListEmptyComponent={EmptyQueue}
+        renderItem={renderItem}
+        initialNumToRender={10}
+        windowSize={21}
+        ListEmptyComponent={memo(EmptyQueue)}
         ListHeaderComponent={QueueHeader}
       />
     </View>

@@ -13,9 +13,13 @@ export default function PlayButton({ item }) {
   const activeTrack = useActiveTrack();
 
   const handlePlayButtonPress = useCallback(async () => {
-    activeTrack && activeTrack.id === item.Id && isPlaying.playing === true
-      ? TrackPlayer.pause()
-      : handleAudioPlayback("playButton", item);
+    if (activeTrack?.id === item.Id && isPlaying.playing === true) {
+      await TrackPlayer.pause();
+    } else if (activeTrack?.id === item.Id && isPlaying.playing === false) {
+      await TrackPlayer.play();
+    } else {
+      handleAudioPlayback("playButton", item);
+    }
   }, [activeTrack, isPlaying, item]);
 
   let iconState =

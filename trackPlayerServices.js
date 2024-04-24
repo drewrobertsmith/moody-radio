@@ -76,18 +76,24 @@ export async function handleAudioPlayback(playbackAction, item) {
     await TrackPlayer.skip(0); //skip to frist position in queue
     await TrackPlayer.play(); //play track
     console.log("not in queue and action is play");
-    //if not in queue and queue button pressed
-  } else if (trackIndex === -1 && playbackAction === "addToQueueButton") {
+  }
+  //if not in queue and queue button pressed
+  else if (trackIndex === -1 && playbackAction === "addToQueueButton") {
     await TrackPlayer.add(trackObject); //adds track to the queue in the last position
     console.log("not in queue and action is queue");
-    //if track is already in queue and action is play
-  } else if (trackIndex != -1 && playbackAction === "playButton") {
+  }
+  //if track is already in queue and action is play
+  else if (trackIndex != -1 && playbackAction === "playButton") {
     await TrackPlayer.skip(trackIndex); //skip to track in queue
+    console.log("skip to track");
     await TrackPlayer.move(trackIndex, 0); //move track item to first position
+    console.log("Move track to first position");
     await TrackPlayer.play(); //play track
+    console.log("play");
     console.log("is in queue and action is play");
-    //if track is already in queue and action is queue
-  } else if (trackIndex != -1 && playbackAction === "addToQueueButton") {
+  } 
+  //if track is already in queue and action is queue
+  else if (trackIndex != -1 && playbackAction === "addToQueueButton") {
     Alert.alert("Episode is already in the queue!");
     console.log("is in queue and action is queue");
   }
