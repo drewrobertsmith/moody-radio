@@ -10,7 +10,7 @@ import TrackPlayer from "react-native-track-player";
 
 TrackPlayer.registerPlaybackService(() => playbackService);
 
-export default function App() {
+const App = () => {
   const [isPlayerReady, setIsPlayerReady] = useState(false);
   //this intantiates the player using the setupPlayer() function from the trackservice
   useEffect(() => {
@@ -29,6 +29,12 @@ export default function App() {
   if (!isPlayerReady) {
     return <ActivityIndicator size="large" />;
   } else {
-    return <Text>Hello World</Text>;
+    return (
+      <View>
+        <Text>Hello World</Text>
+      </View>
+    );
   }
-}
+};
+
+export default App;
