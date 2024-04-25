@@ -3,6 +3,7 @@ import TrackPlayer, {
   Capability,
   Event,
   RepeatMode,
+  useActiveTrack,
 } from "react-native-track-player";
 
 import { Alert } from "react-native";
@@ -54,10 +55,17 @@ export async function addTracks() {
   await TrackPlayer.setRepeatMode(RepeatMode.Off);
 }
 
+export async function handleQueueItemSelection(index, refetch) {
+  await TrackPlayer.skip(index); //skips to selected track in queue,
+  await TrackPlayer.move(index, 0); //moves selected track to top position
+  await TrackPlayer.play(); //begins playing slected track
+  refetch; //trigger a useQuery refresh to refresh the view
+}
+
 //function to deal with handling incoming audio, be it from a play button or a queue button and where it ends up in the queue position
 export async function handleAudioPlayback(playbackAction, item) {
   const queue = await TrackPlayer.getQueue();
-  const trackIndex = queue.findIndex((track) => track.id === item.Id);
+  const trackIndex = queue.findIndex((track) => track.id === item.Id); // "0" means track is in queue, "-1" means track is not in queue
 
   //this is the track object for any new tracks
   const trackObject = {
@@ -73,50 +81,44 @@ export async function handleAudioPlayback(playbackAction, item) {
   //if track is not in queue & playback initiated from playbutton
   if (trackIndex === -1 && playbackAction === "playButton") {
     await TrackPlayer.add(trackObject, 0); //adds track to first position in queue
-    await TrackPlayer.skip(0); //skip to frist position in queue
+    await TrackPlayer.skip(0); //skip to first position in queue
     await TrackPlayer.play(); //play track
-    console.log("not in queue and action is play");
+  }
+  //if track is already in queue and action is play
+  else if (trackIndex === 0 && playbackAction === "playButton") {
+    await TrackPlayer.skip(trackIndex); //skip to track in queue
+    await TrackPlayer.move(trackIndex, 0); //move track item to first position
+    await TrackPlayer.play(); //play track
   }
   //if not in queue and queue button pressed
   else if (trackIndex === -1 && playbackAction === "addToQueueButton") {
     await TrackPlayer.add(trackObject); //adds track to the queue in the last position
-    console.log("not in queue and action is queue");
   }
-  //if track is already in queue and action is play
-  else if (trackIndex != -1 && playbackAction === "playButton") {
-    await TrackPlayer.skip(trackIndex); //skip to track in queue
-    console.log("skip to track");
-    await TrackPlayer.move(trackIndex, 0); //move track item to first position
-    console.log("Move track to first position");
-    await TrackPlayer.play(); //play track
-    console.log("play");
-    console.log("is in queue and action is play");
-  } 
   //if track is already in queue and action is queue
-  else if (trackIndex != -1 && playbackAction === "addToQueueButton") {
+  else if (trackIndex === 0 && playbackAction === "addToQueueButton") {
     Alert.alert("Episode is already in the queue!");
-    console.log("is in queue and action is queue");
   }
+  return trackIndex;
 }
 
-export const storePlaybackData = async (trackObject) => {
-  try {
-    const jsonValue = JSON.stringify(trackObject);
-    await AsyncStorage.setItem(`${trackObject.id}`, jsonValue);
-    //console.log(`${trackObject.id} saved`);
-  } catch (e) {
-    console.error(e);
-  }
-};
+// export const storePlaybackData = async (trackObject) => {
+//   try {
+//     const jsonValue = JSON.stringify(trackObject);
+//     await AsyncStorage.setItem(`${trackObject.id}`, jsonValue);
+//     //console.log(`${trackObject.id} saved`);
+//   } catch (e) {
+//     console.error(e);
+//   }
+// };
 
-const logAsyncStorage = async () => {
-  const keys = await AsyncStorage.getAllKeys();
-  keys.forEach(async (key) => {
-    const value = await AsyncStorage.getItem(key);
-    //console.log(`Key: ${key}, Value: ${value}`);
-  });
-};
-logAsyncStorage();
+// const logAsyncStorage = async () => {
+//   const keys = await AsyncStorage.getAllKeys();
+//   keys.forEach(async (key) => {
+//     const value = await AsyncStorage.getItem(key);
+//     //console.log(`Key: ${key}, Value: ${value}`);
+//   });
+// };
+// logAsyncStorage();
 
 // const clearAll = async () => {
 //   try {
@@ -194,7 +196,7 @@ export async function playbackService() {
       //   activeTrack.lastPosition
       // );
       //console.log("current Track", activeTrack.index, activeTrack.track);
-      await storePlaybackData(activeTrack.track);
+      //await storePlaybackData(activeTrack.track);
     }
   );
 }

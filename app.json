@@ -12,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "mediated-reality.moodyradio"
@@ -41,7 +39,14 @@
       "url": "https://u.expo.dev/03950fc3-5e51-4655-a3d2-1f119662ad56"
     },
     "plugins": [
-      "expo-router"
+      ["expo-router"],
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "mediated-reality",
+          "project": "moody-radio"
+        }
+      ]
     ]
   }
 }

@@ -10,6 +10,7 @@ import TrackPlayer, { useProgress } from "react-native-track-player";
 import { formatDate, formatDuration } from "../../../services/formatters";
 
 import { ScaleDecorator } from "react-native-draggable-flatlist";
+import { handleQueueItemSelection } from "../../../../trackPlayerServices";
 
 export default function QueueItem({
   item,
@@ -19,13 +20,6 @@ export default function QueueItem({
   isActive,
   refetch,
 }) {
-  async function handleItemPress() {
-    await TrackPlayer.skip(index); //skips to selected track in queue,
-    await TrackPlayer.move(index, 0); //moves selected track to top position
-    await TrackPlayer.play(); //begins playing slected track
-    refetch;
-  }
-
   const { position, duration } = useProgress();
   const progressWidth = duration > 0 ? (position / duration) * 100 : 0;
 
@@ -43,7 +37,11 @@ export default function QueueItem({
     // </ScaleDecorator>
 
     <View style={styles.container}>
-      <Pressable onPress={handleItemPress}>
+      <Pressable
+        onPress={() => {
+          handleQueueItemSelection(index, refetch);
+        }}
+      >
         <View style={styles.trackContainer}>
           <View style={styles.progressBar}>
             <Image style={styles.image} source={{ uri: item.artwork }} />

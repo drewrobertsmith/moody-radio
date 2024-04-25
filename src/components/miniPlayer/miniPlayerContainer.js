@@ -8,12 +8,13 @@ import { useActiveTrack } from "react-native-track-player";
 
 export default function MiniPlayerContainer(props) {
   const activeTrack = useActiveTrack();
+  console.log("Active TRack: ", activeTrack);
 
   function MiniPlayerImageContainer() {
     return (
       <View style={styles.miniPlayerImageContainer}>
-        {activeTrack && activeTrack.artwork ? (
-          <Image source={{ uri: activeTrack.artwork }} height={50} width={50} />
+        {activeTrack?.artwork ? (
+          <Image source={{ uri: activeTrack?.artwork }} height={50} width={50} />
         ) : null}
       </View>
     );

@@ -3,34 +3,25 @@ import TrackPlayer from "react-native-track-player";
 import { View } from "react-native";
 import { handleAudioPlayback } from "../../trackPlayerServices";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 export default function QueueButton({ item }) {
-  const { data } = useQuery({
-    queryKey: ["queueList"],
-    queryFn: async () => {
-      try {
-        const data = await TrackPlayer.getQueue();
-        return data;
-      } catch (e) {
-        console.error(e);
-        throw e;
-      }
-    },
-    notifyOnChangeProps: "all",
-  });
+  const [trackIndex, setTrackIndex] = useState(-1);
 
-  const trackIndex = data?.findIndex((track) => track.id === item.Id);
+  const handleQueueButtonPress = async () => {
+    const trackIndex = await handleAudioPlayback("addToQueueButton", item);
+    setTrackIndex(trackIndex);
+  };
 
   let queueButtonState;
+  let queueButtonColor;
   if (trackIndex === -1) {
     queueButtonState = "playlist-add";
+    queueButtonColor = "black";
   } else if (trackIndex != -1) {
     queueButtonState = "playlist-add-check";
+    queueButtonColor = "green";
   }
-
-  const handleQueueButtonPress = () => {
-    handleAudioPlayback("addToQueueButton", item);
-  };
 
   return (
     <View
@@ -41,7 +32,7 @@ export default function QueueButton({ item }) {
       <MaterialIcons
         name={queueButtonState}
         size={32}
-        color="black"
+        color={queueButtonColor}
         onPress={() => {
           handleQueueButtonPress();
         }}
