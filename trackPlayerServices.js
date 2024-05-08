@@ -4,6 +4,7 @@ import TrackPlayer, {
   Event,
   RepeatMode,
   useActiveTrack,
+  useIsPlaying,
 } from "react-native-track-player";
 
 import { Alert } from "react-native";
@@ -62,6 +63,16 @@ export async function handleQueueItemSelection(index, refetch) {
   refetch; //trigger a useQuery refresh to refresh the view
 }
 
+export async function handlePlayButtonPress(item, isPlaying, activeTrack) {
+  if (activeTrack?.id === item.Id && isPlaying.playing === true) {
+    await TrackPlayer.pause();
+  } else if (activeTrack?.id === item.Id && isPlaying.playing === false) {
+    await TrackPlayer.play();
+  } else {
+    handleAudioPlayback("playButton", item);
+  }
+}
+
 //function to deal with handling incoming audio, be it from a play button or a queue button and where it ends up in the queue position
 export async function handleAudioPlayback(playbackAction, item) {
   const queue = await TrackPlayer.getQueue();
@@ -105,7 +116,7 @@ export async function handleAudioPlayback(playbackAction, item) {
 //   try {
 //     const jsonValue = JSON.stringify(trackObject);
 //     await AsyncStorage.setItem(`${trackObject.id}`, jsonValue);
-//     //console.log(`${trackObject.id} saved`);
+//     console.log(`${trackObject.id} saved`);
 //   } catch (e) {
 //     console.error(e);
 //   }

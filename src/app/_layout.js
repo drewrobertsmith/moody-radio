@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack, useNavigationContainerRef } from "expo-router";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Constants from "expo-constants";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
@@ -14,11 +15,13 @@ const routingInstrumentation = new Sentry.ReactNavigationInstrumentation();
 
 Sentry.init({
   dsn: "https://dc0fec916165c76a4bb2c0234356c357@o4507147687821312.ingest.us.sentry.io/4507147712266240",
+  tracesSampleRate: 1.0,
   debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
   integrations: [
     new Sentry.ReactNativeTracing({
       // Pass instrumentation to be used as `routingInstrumentation`
       routingInstrumentation,
+      enableNativeFramesTracking: Constants.appOwnership !== "expo", // Only in native builds, not in Expo Go.
       // ...
     }),
   ],
